@@ -13,76 +13,77 @@ DB_PATH = os.path.join("database", "data.db")
 # SQL-запросы для создания таблиц
 create_categories_table_query = """
 CREATE TABLE IF NOT EXISTS categories
-(   
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE
-)"""
+(
+    name TEXT NOT NULL UNIQUE,
+    encoded_image BLOB NOT NULL
+)
+"""
 
 create_products_table_query = """
 CREATE TABLE IF NOT EXISTS products
-(   
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    category_id INTEGER NOT NULL,
+(
     name TEXT NOT NULL,
     price INTEGER NOT NULL,
     description TEXT NOT NULL,
-    encoded_image TEXT NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
-)"""
+    category TEXT NOT NULL,
+    encoded_image BLOB NOT NULL
+)
+"""
 
 # Инициализация базы данных
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute(create_categories_table_query)
-    cur.execute(create_products_table_query)
-    conn.commit()
-    conn.close()
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute(create_categories_table_query)
+        cur.execute(create_products_table_query)
+        conn.commit()
 
 # Добавление категории
-def add_category(name):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("INSERT OR IGNORE INTO categories(name) VALUES (?)", (name,))
-    conn.commit()
-    conn.close()
+def add_category(name, encoded_image):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("INSERT OR IGNORE INTO categories(name, encoded_image) VALUES (?, ?)", (name, encoded_image))
+        conn.commit()
 
 # Добавление продукта
 def add_product(category_name, name, price, description, encoded_image):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
 
-    # Получение id категории
-    cur.execute("SELECT id FROM categories WHERE name = ?", (category_name,))
-    category_id = cur.fetchone()
+        # Проверка существования категории
+        cur.execute("SELECT name FROM categories WHERE name = ?", (category_name,))
+        if cur.fetchone():
+            cur.execute(
+                "INSERT INTO products(name, price, description, category, encoded_image) VALUES (?, ?, ?, ?, ?)",
+                (name, price, description, category_name, encoded_image),
+            )
+            conn.commit()
+        else:
+            logger.error(f"Category '{category_name}' not found. Product '{name}' not added.")
 
-    if category_id:
-        category_id = category_id[0]
-        cur.execute(
-            "INSERT INTO products(category_id, name, price, description, encoded_image) VALUES (?, ?, ?, ?, ?)",
-            (category_id, name, price, description, encoded_image),
-        )
-        conn.commit()
-    else:
-        logger.error(f"Category '{category_name}' not found. Product '{name}' not added.")
-    
-    conn.close()
-
-# Инициализация базы данных и добавление данных
-init_db()
-
+# Чтение категорий
 def read_categories():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("SELECT name FROM categories")
-    categories = cur.fetchall()
-    conn.close()
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM categories")
+        categories = cur.fetchall()
     return categories
 
-def read_products_of_category(category):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM products WHERE category_id = ?", (category,))
-    products = cur.fetchall()
-    conn.close()
+# Чтение продуктов конкретной категории
+def read_products_of_category(category_name):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM products WHERE category = ?", (category_name,))
+        products = cur.fetchall()
     return products
+
+# Чтение всех продуктов
+def read_products():
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM products")
+        products = cur.fetchall()
+    return products
+
+# Инициализация базы данных и добавление данных
+add_category('яблоки',1)
