@@ -37,7 +37,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # DBase
-database/data.db
+*.db
 
 # Unit test / coverage reports
 htmlcov/
