@@ -36,9 +36,14 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# DBase
+database/data.db
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
+uploads/
+
 .nox/
 .coverage
 .coverage.*
