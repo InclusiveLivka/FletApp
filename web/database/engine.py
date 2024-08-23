@@ -14,8 +14,7 @@ DB_PATH = os.path.join("database", "data.db")
 create_categories_table_query = """
 CREATE TABLE IF NOT EXISTS categories
 (
-    name TEXT NOT NULL UNIQUE,
-    encoded_image BLOB NOT NULL
+    name TEXT NOT NULL UNIQUE
 )
 """
 
@@ -39,10 +38,10 @@ def init_db():
         conn.commit()
 
 # Добавление категории
-def add_category(name, encoded_image):
+def add_category(name,):
     with sqlite3.connect(DB_PATH) as conn:
         cur = conn.cursor()
-        cur.execute("INSERT OR IGNORE INTO categories(name, encoded_image) VALUES (?, ?)", (name, encoded_image))
+        cur.execute("INSERT OR IGNORE INTO categories(name) VALUES (?)", (name, ))
         conn.commit()
 
 # Добавление продукта
@@ -99,3 +98,12 @@ def read_names_products():
         products = cur.fetchall()
     return products
 # Инициализация базы данных и добавление данных
+
+def read_data_of_name(name):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM products WHERE name = ?", (name,))
+        data_products = cur.fetchall()
+        print(data_products)
+    return data_products
+

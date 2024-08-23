@@ -49,7 +49,7 @@ def encode_image_to_base64(
                 image_file.read()
             ).decode('utf-8')
         os.remove(file_path)
-        UIConstants.ENCODED_IMAGE.value = encoded_string
+        UIConstants.ENCODED_IMAGE_PRODUCT.value = encoded_string
 
         logger.info(f"File uploaded and encoded: {update.file_name}")
 
@@ -119,7 +119,7 @@ def create_page(page: ft.Page) -> ft.Container:
                 UIConstants.NAME_PRODUCT,
                 UIConstants.PRICE_PRODUCT,
                 UIConstants.DESCRIPTION_PRODUCT,
-                UIConstants.get_category_dropdown_options(),
+                UIConstants.CATEGORY_NAME,
                 ft.Row(
                     controls=[
                         ft.FloatingActionButton(
@@ -129,8 +129,8 @@ def create_page(page: ft.Page) -> ft.Container:
                                 UIConstants.NAME_PRODUCT.value,
                                 UIConstants.PRICE_PRODUCT.value,
                                 UIConstants.DESCRIPTION_PRODUCT.value,
-                                UIConstants.CATEGORY_NAME_FIELD.value,
-                                UIConstants.ENCODED_IMAGE.value
+                                UIConstants.CATEGORY_NAME.value,
+                                UIConstants.ENCODED_IMAGE_PRODUCT.value 
                             )
                         ),
                         ft.FloatingActionButton(
@@ -139,7 +139,7 @@ def create_page(page: ft.Page) -> ft.Container:
                         )
                     ],
                 ),
-                UIConstants.ENCODED_IMAGE,
+                UIConstants.ENCODED_IMAGE_PRODUCT,
             ]
         )
     )

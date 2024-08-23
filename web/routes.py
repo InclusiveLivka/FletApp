@@ -25,7 +25,7 @@ async def get_view_controls(page: ft.Page):
     if page.route == '/home':
         return create_home_page(page)
     elif page.route.startswith('/products/'):
-        return [create_product_details(page)]
+        return create_product_details(page)
     elif page.route.startswith('/categories/'):
         return [create_category_details(page)]
     elif page.route == '/productadd':

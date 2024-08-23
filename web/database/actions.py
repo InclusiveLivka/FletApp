@@ -53,6 +53,18 @@ def load_categories() -> ft.Column:
     logger.info(f"Loaded {len(items_categories)} categories")
     return ft.Column(controls=items_categories)
 
+def create_text_items(data: List[str], label: str) -> List[ft.Text]:
+    """
+    Create a list of Flet Text items from data.
+
+    :param data: List of data to convert into text items.
+    :param label: The label to prefix each text item with.
+    :return: A list of Flet Text items.
+    """
+    if not data:
+        return [ft.Text('Нет категорий', size=20,text_align=ft.TextAlign.CENTER)]
+    else:
+        return [ft.Text(f"{label}: {data[0]}", size=20)]
 
 def load_products() -> ft.Column:
     """
@@ -62,12 +74,12 @@ def load_products() -> ft.Column:
     :return: An instance of ft.Column containing product items.
     """
     logger.info("Loading products")
-    items_product = create_text_items(engine.read_products(), "Product")
+    items_product = create_product(engine.read_products())
     logger.info(f"Loaded {len(items_product)} products")
     return ft.Column(controls=items_product)
 
 
-def create_text_items(data: List[str], label: str) -> List[ft.Text]:
+def create_product(data: List[str]) -> List[ft.Text]:
     """
     Create a list of Flet Text items from data.
 
@@ -75,6 +87,9 @@ def create_text_items(data: List[str], label: str) -> List[ft.Text]:
     :param label: The label to prefix each text item with.
     :return: A list of Flet Text items.
     """
-    return [ft.Text(
-        f"{label}: {item}", size=20, color=ft.colors.WHITE
-    ) for item in data]
+    if not data:
+        return [ft.Text('Нет товаров', size=20,text_align=ft.TextAlign.CENTER)]
+    else:
+        return [ft.Container(content=ft.Stack(
+            controls=[ft.Image(src_base64=data[4], width=100, height=100), ft.Text(data[0], size=20)]))]
+

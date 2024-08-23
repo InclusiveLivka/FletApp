@@ -20,28 +20,24 @@ class UIConstants:
     )
 
     # Assuming the default value and other initializations
-    ENCODED_IMAGE = ft.TextField(value='1', opacity=1.0)
+    ENCODED_IMAGE_CATEGORY = ft.TextField(value='1', opacity=1.0, read_only=True)
+    ENCODED_IMAGE_PRODUCT = ft.TextField(value='1', opacity=1.0, read_only=True)
     NAME_PRODUCT = ft.TextField(label="Name")
     PRICE_PRODUCT = ft.TextField(label="Price")
     DESCRIPTION_PRODUCT = ft.TextField(label="Description")
+    
 
-    @staticmethod
-    def get_category_dropdown_options() -> List[ft.dropdown.Option]:
-        """
-        Get dropdown options for categories.
 
-        :return: List of Flet dropdown options for categories.
-        """
-        categories = engine.read_categories()
-        return ft.Dropdown(
-            label="Categories", options=[
-                ft.dropdown.Option(category[0]) for category in categories
-            ]
-        )
 
     CATEGORY_NAME_FIELD = ft.TextField(
         label="Название категории",
         width=300,
         height=40,
         autofocus=True,
+    )
+
+    CATEGORY_NAME = ft.Dropdown(
+            label="Categories", options=[
+                ft.dropdown.Option(category[0]) for category in engine.read_categories()
+            ]
     )

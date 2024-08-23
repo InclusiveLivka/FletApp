@@ -3,7 +3,7 @@ import flet as ft
 from web.ui.elements import UIConstants
 from web import routes
 from web.database.engine import read_names_products
-from web.database.actions import load_categories, load_products
+from web.database.actions import load_products
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ def create_page(page: ft.Page):
         on_click=lambda e: page.go('/categoryadd'),
     )
 
-    categories = load_categories()
+    # categories = load_categories()
     products = load_products()
 
-    return [button_add_product, search_bar, filtered_list, categories, products]
+    return [button_add_product, search_bar, filtered_list, products]
