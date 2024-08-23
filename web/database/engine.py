@@ -46,7 +46,7 @@ def add_category(name, encoded_image):
         conn.commit()
 
 # Добавление продукта
-def add_product(category_name, name, price, description, encoded_image):
+def add_product(name, price, description, category_name, encoded_image):
     with sqlite3.connect(DB_PATH) as conn:
         cur = conn.cursor()
 
@@ -85,5 +85,17 @@ def read_products():
         products = cur.fetchall()
     return products
 
+def read_name_and_encoded_image_product():
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT name, encoded_image FROM products")
+        products = cur.fetchall()
+    return products
+
+def read_names_products():
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM products")
+        products = cur.fetchall()
+    return products
 # Инициализация базы данных и добавление данных
-add_category('яблоки',1)

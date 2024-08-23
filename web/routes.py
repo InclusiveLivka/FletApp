@@ -11,6 +11,8 @@ from web.pages.category_details import create_page as create_category_details
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def go_products(page: ft.Page, name: str):
+    page.go(f'/products/{name}')
 
 async def get_view_controls(page: ft.Page):
     """

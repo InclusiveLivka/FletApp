@@ -10,12 +10,10 @@ def create_page(page: ft.Page) -> list[Text]:
     :return: A list of Flet controls for the product details page.
     """
     try:
-        name = page.route.split('/products/')[1]
-        description = f"This is a brief description of {name}."
-        return [
-            description,
-            ft.Text(f"Product: {name}", size=25, weight=ft.FontWeight.BOLD),
-        ]
+        ft.Container(content=
+                    ft.Text(f"Product: {page.route.split('/products/')[1]}", size=25, weight=ft.FontWeight.BOLD),
+        )
+        
     except IndexError:
         return [ft.Text(
             "Product not found.", size=25, weight=ft.FontWeight.BOLD

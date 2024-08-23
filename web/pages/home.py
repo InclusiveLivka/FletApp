@@ -1,5 +1,8 @@
 import logging
 import flet as ft
+from web.ui.elements import UIConstants
+from web import routes
+from web.database.engine import read_names_products
 from web.database.actions import load_categories, load_products
 
 logging.basicConfig(level=logging.INFO)
@@ -14,6 +17,9 @@ def handle_submit_search_bar(e, search_bar: ft.SearchBar):
     :param search_bar: The search bar object.
     """
     logger.info(f"Search submitted: {search_bar.value}")
+
+
+filtered_list = ft.Column()
 
 
 def handle_change_search_bar(
@@ -34,16 +40,18 @@ def handle_change_search_bar(
     logger.info(f"Search query: {search_query}")
 
     if search_query:
-        for name in ['product']:  # Replace with actual product list
-            if search_query in name.lower():
+        for name in read_names_products():  # Replace with actual product list
+            if search_query in str(name).lower():
                 if len(filtered_list.controls) < 3:
+                    link_name = str(name[0])
+                    
                     filtered_list.controls.append(
                         ft.ListTile(
-                            title=ft.Text(name),
-                            on_click=lambda e,
-                            link_name=name: page.go(f'/products/{link_name}')
+                            title=ft.Text(link_name),
+                            on_click=lambda e: routes.go_products(page=page, name=link_name),
                         ))
     page.update()
+
 
 
 def create_page(page: ft.Page):
@@ -57,10 +65,13 @@ def create_page(page: ft.Page):
 
     search_bar = ft.SearchBar(
         view_elevation=2,
-        on_change=handle_change_search_bar,
         on_submit=handle_submit_search_bar,
         bar_leading=ft.Icon(ft.icons.SEARCH),
     )
+    search_bar.on_change = lambda e: handle_change_search_bar(
+        e, search_bar, filtered_list, page
+    )
+    filtered_list
 
     button_add_product = ft.ElevatedButton(
         text="Add product",
@@ -70,4 +81,4 @@ def create_page(page: ft.Page):
     categories = load_categories()
     products = load_products()
 
-    return [button_add_product, search_bar, categories, products]
+    return [button_add_product, search_bar, filtered_list, categories, products]
