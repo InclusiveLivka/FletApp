@@ -1,0 +1,73 @@
+import logging
+import flet as ft
+from web.database.actions import load_categories, load_products
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+def handle_submit_search_bar(e, search_bar: ft.SearchBar):
+    """
+    Handles search bar submit action.
+
+    :param e: Event object.
+    :param search_bar: The search bar object.
+    """
+    logger.info(f"Search submitted: {search_bar.value}")
+
+
+def handle_change_search_bar(
+    e, search_bar: ft.SearchBar,
+    filtered_list: ft.Column,
+    page: ft.Page
+) -> None:
+    """
+    Handles search bar input changes.
+
+    :param e: Event object.
+    :param search_bar: The search bar object.
+    :param filtered_list: The filtered results container.
+    :param page: The Flet page object.
+    """
+    search_query = search_bar.value.lower()
+    filtered_list.controls.clear()  # Clear previous results
+    logger.info(f"Search query: {search_query}")
+
+    if search_query:
+        for name in ['product']:  # Replace with actual product list
+            if search_query in name.lower():
+                if len(filtered_list.controls) < 3:
+                    filtered_list.controls.append(
+                        ft.ListTile(
+                            title=ft.Text(name),
+                            on_click=lambda e,
+                            link_name=name: page.go(f'/products/{link_name}')
+                        ))
+    page.update()
+
+
+def create_page(page: ft.Page):
+    """
+    Create the home page view with a search bar, add product button,
+    categories, and products.
+
+    :param page: An instance of ft.Page to create the home page for.
+    :return: A list of Flet controls for the home page.
+    """
+
+    search_bar = ft.SearchBar(
+        view_elevation=2,
+        on_change=handle_change_search_bar,
+        on_submit=handle_submit_search_bar,
+        bar_leading=ft.Icon(ft.icons.SEARCH),
+    )
+
+    button_add_product = ft.ElevatedButton(
+        text="Add product",
+        on_click=lambda e: page.go('/categoryadd'),
+    )
+
+    categories = load_categories()
+    products = load_products()
+
+    return [button_add_product, search_bar, categories, products]
