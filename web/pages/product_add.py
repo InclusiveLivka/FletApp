@@ -15,7 +15,8 @@ def add_new_product(
     price: str,
     description: str,
     category: str,
-    encoded_image: str
+    encoded_image: str,
+    page
 ) -> None:
     """
     Adds a new product to the database.
@@ -28,6 +29,12 @@ def add_new_product(
     """
     engine.add_product(name, price, description, category, encoded_image)
     logger.info(f"Product added: {name}, Category: {category}")
+    UIConstants.NAME_PRODUCT.value = ''
+    UIConstants.PRICE_PRODUCT.value = ''
+    UIConstants.DESCRIPTION_PRODUCT.value = ''
+    UIConstants.CATEGORY_NAME.value = ''
+    UIConstants.ENCODED_IMAGE_PRODUCT.value = ''
+    page.update()
 
 
 def encode_image_to_base64(
@@ -50,7 +57,7 @@ def encode_image_to_base64(
             ).decode('utf-8')
         os.remove(file_path)
         UIConstants.ENCODED_IMAGE_PRODUCT.value = encoded_string
-
+        
         logger.info(f"File uploaded and encoded: {update.file_name}")
 
 
@@ -124,20 +131,28 @@ def create_page(page: ft.Page) -> ft.Container:
                     controls=[
                         ft.FloatingActionButton(
                             text="Добавить продукт",
-                            width=150,
+                            width=300,
                             on_click=lambda e: add_new_product(
                                 UIConstants.NAME_PRODUCT.value,
                                 UIConstants.PRICE_PRODUCT.value,
                                 UIConstants.DESCRIPTION_PRODUCT.value,
                                 UIConstants.CATEGORY_NAME.value,
-                                UIConstants.ENCODED_IMAGE_PRODUCT.value 
+                                UIConstants.ENCODED_IMAGE_PRODUCT.value,
+                                page
                             )
                         ),
                         ft.FloatingActionButton(
                             icon=ft.icons.IMAGE,
+                            width=89,
                             on_click=lambda _: file_picker.pick_files(),
                         )
                     ],
+                ),
+                ft.FloatingActionButton(
+                    text="Назад",
+                    width=399,
+                    icon=ft.icons.ARROW_BACK,
+                    on_click=lambda _: page.go("/categoryadd"),
                 ),
                 UIConstants.ENCODED_IMAGE_PRODUCT,
             ]

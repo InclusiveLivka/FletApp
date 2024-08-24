@@ -62,11 +62,12 @@ def create_page(page: ft.Page):
     :param page: An instance of ft.Page to create the home page for.
     :return: A list of Flet controls for the home page.
     """
-
+    page.clean()
     search_bar = ft.SearchBar(
         view_elevation=2,
         on_submit=handle_submit_search_bar,
         bar_leading=ft.Icon(ft.icons.SEARCH),
+        width=399
     )
     search_bar.on_change = lambda e: handle_change_search_bar(
         e, search_bar, filtered_list, page
@@ -79,6 +80,6 @@ def create_page(page: ft.Page):
     )
 
     # categories = load_categories()
-    products = load_products()
+    products = load_products(page)
 
     return [button_add_product, search_bar, filtered_list, products]

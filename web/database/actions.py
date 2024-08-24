@@ -2,6 +2,8 @@ import logging
 import flet as ft
 from typing import List
 from web.database import engine
+from web.ui import elements
+from web import routes
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -53,6 +55,7 @@ def load_categories() -> ft.Column:
     logger.info(f"Loaded {len(items_categories)} categories")
     return ft.Column(controls=items_categories)
 
+
 def create_text_items(data: List[str], label: str) -> List[ft.Text]:
     """
     Create a list of Flet Text items from data.
@@ -62,11 +65,14 @@ def create_text_items(data: List[str], label: str) -> List[ft.Text]:
     :return: A list of Flet Text items.
     """
     if not data:
-        return [ft.Text('Нет категорий', size=20,text_align=ft.TextAlign.CENTER)]
+        return [ft.Text('Нет категорий', size=20, text_align=ft.TextAlign.CENTER)]
     else:
         return [ft.Text(f"{label}: {data[0]}", size=20)]
 
-def load_products() -> ft.Column:
+
+products = ft.Column()
+
+def load_products(page: ft.Page) -> ft.Column:
     """
     Load products from the database and return a Flet Column with product 
     items.
@@ -74,12 +80,15 @@ def load_products() -> ft.Column:
     :return: An instance of ft.Column containing product items.
     """
     logger.info("Loading products")
-    items_product = create_product(engine.read_products())
-    logger.info(f"Loaded {len(items_product)} products")
-    return ft.Column(controls=items_product)
+    products.controls.clear()
+    for el in engine.read_products():
+        name, description, price, category, encoded_image = el
+        list_of_product = create_product(name, encoded_image, page)
+        products.controls.append(list_of_product)
+    return products
 
 
-def create_product(data: List[str]) -> List[ft.Text]:
+def create_product(name, encoded_image, page: ft.Page) -> ft.Container:
     """
     Create a list of Flet Text items from data.
 
@@ -87,9 +96,32 @@ def create_product(data: List[str]) -> List[ft.Text]:
     :param label: The label to prefix each text item with.
     :return: A list of Flet Text items.
     """
-    if not data:
-        return [ft.Text('Нет товаров', size=20,text_align=ft.TextAlign.CENTER)]
+    if not name:
+        return [ft.Text('Нет товаров', size=20, text_align=ft.TextAlign.CENTER)]
     else:
-        return [ft.Container(content=ft.Stack(
-            controls=[ft.Image(src_base64=data[4], width=100, height=100), ft.Text(data[0], size=20)]))]
+        return ft.Container(content=ft.Stack(
+            controls=[
+                ft.Image(
+                    src_base64=encoded_image,
+                    width=399,
+                    height=100,
+                    fit=ft.ImageFit.FIT_WIDTH,
+                    
+                ),
+                ft.Container(content=ft.Text(
+                    name,
+                    size=20,
 
+                ),alignment=ft.Alignment(0, 0),
+                    bgcolor=ft.colors.BLACK87,
+                    opacity=0.5,
+                ),
+            ]),
+            bgcolor=ft.colors.BLACK,
+            width=399,
+            height=100,
+            border_radius=30,
+            shadow=elements.UIConstants.BOX_SHADOW,
+            on_click=lambda e: routes.go_products(page, name),
+            margin=10,
+        )

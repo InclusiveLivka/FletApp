@@ -20,24 +20,26 @@ class UIConstants:
     )
 
     # Assuming the default value and other initializations
-    ENCODED_IMAGE_CATEGORY = ft.TextField(value='1', opacity=1.0, read_only=True)
-    ENCODED_IMAGE_PRODUCT = ft.TextField(value='1', opacity=1.0, read_only=True)
-    NAME_PRODUCT = ft.TextField(label="Name")
-    PRICE_PRODUCT = ft.TextField(label="Price")
-    DESCRIPTION_PRODUCT = ft.TextField(label="Description")
+    ENCODED_IMAGE_CATEGORY = ft.TextField(value='1', opacity=0, read_only=True)
+    ENCODED_IMAGE_PRODUCT = ft.TextField(value='1', opacity=0, read_only=True)
+    NAME_PRODUCT = ft.TextField(label="Название", width=399)
+    PRICE_PRODUCT = ft.TextField(label="Цена", width=399)
+    DESCRIPTION_PRODUCT = ft.TextField(label="Описание", width=399, multiline=True)
     
 
 
 
     CATEGORY_NAME_FIELD = ft.TextField(
         label="Название категории",
-        width=300,
+        width=399,
         height=40,
         autofocus=True,
     )
 
     CATEGORY_NAME = ft.Dropdown(
-            label="Categories", options=[
+            label="Категория (обязательно)",
+            width=399,
+            options=[
                 ft.dropdown.Option(category[0]) for category in engine.read_categories()
             ]
     )

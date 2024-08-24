@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def add_new_category(category_name: str):
+def add_new_category(category_name: str, page):
     """
     Adds a new category to the database.
 
@@ -18,6 +18,9 @@ def add_new_category(category_name: str):
     """
     engine.add_category(category_name)
     logger.info(f"New category added: {category_name}")
+    UIConstants.CATEGORY_NAME_FIELD.value = ""
+    page.update()
+    
 
 
 def encode_image_to_base64(
@@ -84,6 +87,7 @@ def setup_file_picker(page: ft.Page) -> ft.FilePicker:
 
     :param page: The Flet page object.
     """
+    
     file_picker = ft.FilePicker(
         on_result=lambda _: upload_files(file_picker, page),
         on_upload=encode_image_to_base64,
@@ -113,21 +117,28 @@ def create_page(page: ft.Page) -> ft.Container:
                     controls=[
                         ft.FloatingActionButton(
                             text="Добавить категорию",
-                            width=150,
+                            width=300,
                             on_click=lambda e: add_new_category(
-                                UIConstants.CATEGORY_NAME_FIELD.value)
+                                UIConstants.CATEGORY_NAME_FIELD.value,
+                                
+                                page,
+                                )
                         ),
                             ft.FloatingActionButton(
                                 icon=ft.icons.IMAGE,
-                                on_click=lambda e: file_picker.pick_files()
+                                width=89,
+                                on_click=lambda e: file_picker.pick_files(),
                         ),
-                        ft.FloatingActionButton(
-                            text="Далее",
-                            on_click=lambda _: page.go('/productadd'),
-                        )
                     ],
                         
                 ),
+                ft.FloatingActionButton(
+                            text="Далее",
+                            on_click=lambda _: page.go('/productadd'),
+                            width=399,
+                            
+                            
+                            ),
                 UIConstants.ENCODED_IMAGE_CATEGORY
             ]
         )
