@@ -7,16 +7,20 @@ from web.pages.product_add import create_page as create_product_add_page
 from web.pages.category_add import create_page as create_category_add_page
 from web.pages.product_details import create_page as create_product_details
 from web.pages.category_details import create_page as create_category_details
+from web.pages.delete_page import create_page as create_delete_page
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def go_products(page: ft.Page, name: str):
     page.go(f'/products/{name}')
-    
+
+
 def go_categories(page: ft.Page, name: str):
     page.go(f'/categories/{name}')
+
 
 async def get_view_controls(page: ft.Page):
     """
@@ -38,7 +42,8 @@ async def get_view_controls(page: ft.Page):
         return [create_category_add_page(page)]
     elif page.route == '/adminhome':
         return create_admin_home_page(page)
-        
+    elif page.route == '/deletepage':
+        return create_delete_page(page)
 
     return []
 
@@ -65,7 +70,7 @@ async def setup_routes(page: ft.Page):
     # Если маршрут пустой, устанавливаем начальный маршрут как /home
     if not page.route or page.route == "/":
         logger.info("Initial route is empty. Navigating to /home.")
-        page.route = '/home'
+        page.route = '/adminhome'
         page.update()
 
     page.on_route_change = route_change

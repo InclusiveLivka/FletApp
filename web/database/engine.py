@@ -130,3 +130,14 @@ def read_data_of_name(name):
     return data_products
 
 
+def delete_product(name):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM products WHERE name = ?", (name,))
+        conn.commit()
+
+def delete_category_with_products(name):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        
+        

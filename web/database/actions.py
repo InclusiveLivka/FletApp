@@ -46,6 +46,8 @@ def update_page_with_data(
 
 
 categories = ft.Row()
+categories.scroll = ft.ScrollMode.HIDDEN
+categories.width = 399
 
 
 def load_categories(page: ft.Page) -> ft.Row:
@@ -106,6 +108,7 @@ def create_category(name, encoded_image, page: ft.Page) -> ft.Row:
             shadow=elements.UIConstants.BOX_SHADOW,
             on_click=lambda e: routes.go_categories(page, name_link),
             margin=10,
+            
         )
 
 

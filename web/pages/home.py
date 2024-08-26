@@ -75,16 +75,7 @@ def create_page(page: ft.Page):
     )
     filtered_list
     
-    button_add_product = ft.ElevatedButton(
-        text="Добавить",
-        width=189,
-        on_click=lambda e: page.go('/categoryadd'),
-    )
-    button_delete_product = ft.ElevatedButton(
-        text="Удалить",
-        width=189,
-        on_click=lambda e: page.go('/deletepage'),
-    )
+    
     categories_text = ft.Container(
         content=ft.Text(value="Категории", size=20, weight=10),
         alignment=ft.Alignment(0, -0.5),

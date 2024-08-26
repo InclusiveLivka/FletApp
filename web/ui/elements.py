@@ -43,3 +43,16 @@ class UIConstants:
             ft.dropdown.Option(category[0]) for category in engine.read_categories()
         ]
     )
+    DELETE_CATEGORY_FIELD = ft.Dropdown(
+        label="Выберите категорию для удаления",
+        width=399,
+        options=[
+            ft.dropdown.Option(category[0]) for category in engine.read_categories()
+        ]
+    )
+
+    DELETE_PRODUCT_FIELD = ft.Dropdown(
+        label="Выберите продукт",
+        width=399,
+        options=[ft.dropdown.Option(product[0]) for product in engine.read_products()]
+    )
