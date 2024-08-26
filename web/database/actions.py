@@ -1,8 +1,10 @@
 import logging
 import flet as ft
+import transliterate
 from typing import List
 from web.database import engine
 from web.ui import elements
+from web.ui import error_image
 from web import routes
 
 # Настройка логирования
@@ -43,7 +45,10 @@ def update_page_with_data(
     page.update()
 
 
-def load_categories() -> ft.Column:
+categories = ft.Row()
+
+
+def load_categories(page: ft.Page) -> ft.Row:
     """
     Load categories from the database and return a Flet Column with category
     items.
@@ -51,12 +56,16 @@ def load_categories() -> ft.Column:
     :return: An instance of ft.Column containing category items.
     """
     logger.info("Loading categories")
-    items_categories = create_text_items(engine.read_categories(), "Category")
-    logger.info(f"Loaded {len(items_categories)} categories")
-    return ft.Column(controls=items_categories)
+    categories.controls.clear()
+    for el in engine.read_categories():
+        name, encoded_image = el
+        category = create_category(name, encoded_image, page)
+        categories.controls.append(category)
+    return categories
 
 
-def create_text_items(data: List[str], label: str) -> List[ft.Text]:
+def create_category(name, encoded_image, page: ft.Page) -> ft.Row:
+    name = transliterate.translit(name, 'ru', reversed=False)
     """
     Create a list of Flet Text items from data.
 
@@ -64,17 +73,48 @@ def create_text_items(data: List[str], label: str) -> List[ft.Text]:
     :param label: The label to prefix each text item with.
     :return: A list of Flet Text items.
     """
-    if not data:
+    if not name:
         return [ft.Text('Нет категорий', size=20, text_align=ft.TextAlign.CENTER)]
     else:
-        return [ft.Text(f"{label}: {data[0]}", size=20)]
+        if encoded_image == '0':
+            encoded_image = error_image.image_scr
+        name_link = transliterate.translit(name, reversed=True)
+        return ft.Container(content=ft.Stack(
+            controls=[
+                ft.Image(
+                    src_base64=encoded_image,
+                    fit=ft.ImageFit.FILL,
+                    width=100,
+                    height=100
+                ),
+                ft.Container(content=ft.Text(
+                    name,
+                    size=10
+                ),
+                    alignment=ft.Alignment(0, 0),
+                    bgcolor=ft.colors.BLACK87,
+                    opacity=0.5,
+
+                ),
+
+            ]
+        ),
+            bgcolor=ft.colors.BLACK,
+            width=100,
+            height=100,
+            border_radius=30,
+            shadow=elements.UIConstants.BOX_SHADOW,
+            on_click=lambda e: routes.go_categories(page, name_link),
+            margin=10,
+        )
 
 
 products = ft.Column()
 
+
 def load_products(page: ft.Page) -> ft.Column:
     """
-    Load products from the database and return a Flet Column with product 
+    Load products from the database and return a Flet Column with product
     items.
 
     :return: An instance of ft.Column containing product items.
@@ -98,7 +138,10 @@ def create_product(name, encoded_image, page: ft.Page) -> ft.Container:
     """
     if not name:
         return [ft.Text('Нет товаров', size=20, text_align=ft.TextAlign.CENTER)]
+    
     else:
+        if encoded_image == '0':
+            encoded_image = error_image.image_scr
         return ft.Container(content=ft.Stack(
             controls=[
                 ft.Image(
@@ -106,13 +149,14 @@ def create_product(name, encoded_image, page: ft.Page) -> ft.Container:
                     width=399,
                     height=100,
                     fit=ft.ImageFit.FIT_WIDTH,
-                    
+                    error_content=ft.Text('Нет изображения', size=20),
+
                 ),
                 ft.Container(content=ft.Text(
                     name,
                     size=20,
 
-                ),alignment=ft.Alignment(0, 0),
+                ), alignment=ft.Alignment(0, 0),
                     bgcolor=ft.colors.BLACK87,
                     opacity=0.5,
                 ),
@@ -125,3 +169,22 @@ def create_product(name, encoded_image, page: ft.Page) -> ft.Container:
             on_click=lambda e: routes.go_products(page, name),
             margin=10,
         )
+
+
+products_in_category = ft.Column()
+
+
+def load_products_of_category(page: ft.Page, name_link: str) -> None:
+    # if engine.read_products_of_category(name) == []:
+    #     return ft.Text("Эта категория пуста", size=20, text_align=ft.TextAlign.CENTER)
+    # else:
+    name = transliterate.translit(name_link, 'ru', reversed=False)
+
+    products_in_category.controls.clear()
+    products_in_category.controls.append(ft.Container(content=ft.Text(
+        f"Все товары в ктегории {name}", size=20, color=ft.colors.WHITE)))
+    for el in engine.read_products_of_category(name_link):
+        name, description, price, category, encoded_image = el
+        list_of_product = create_product(name, encoded_image, page)
+        products_in_category.controls.append(list_of_product)
+    return products_in_category

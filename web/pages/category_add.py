@@ -10,13 +10,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def add_new_category(category_name: str, page):
+def add_new_category(category_name: str , encoded_image: str, page):
     """
     Adds a new category to the database.
 
     :param category_name: Name of the new category.
     """
-    engine.add_category(category_name)
+    engine.add_category(category_name,encoded_image)
     logger.info(f"New category added: {category_name}")
     UIConstants.CATEGORY_NAME_FIELD.value = ""
     page.update()
@@ -120,7 +120,7 @@ def create_page(page: ft.Page) -> ft.Container:
                             width=300,
                             on_click=lambda e: add_new_category(
                                 UIConstants.CATEGORY_NAME_FIELD.value,
-                                
+                                UIConstants.ENCODED_IMAGE_CATEGORY.value,
                                 page,
                                 )
                         ),

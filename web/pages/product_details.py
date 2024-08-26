@@ -3,6 +3,7 @@ import flet as ft
 from web.database import engine
 
 
+
 def create_page(page: ft.Page) -> list[Text]:
     """
     Create the product details page view based on the product name in the route.

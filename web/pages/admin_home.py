@@ -75,16 +75,19 @@ def create_page(page: ft.Page):
     )
     filtered_list
     
-    button_add_product = ft.ElevatedButton(
-        text="Добавить",
-        width=189,
-        on_click=lambda e: page.go('/categoryadd'),
-    )
-    button_delete_product = ft.ElevatedButton(
-        text="Удалить",
-        width=189,
-        on_click=lambda e: page.go('/deletepage'),
-    )
+    admin_panel = ft.Row(controls=[
+        ft.ElevatedButton(
+            text="Добавить",
+            width=189,
+            on_click=lambda e: page.go('/categoryadd')
+        ),
+        ft.ElevatedButton(
+            text="Удалить",
+            width=189,
+            on_click=lambda e: page.go('/deletepage')
+        ),
+    ])
+
     categories_text = ft.Container(
         content=ft.Text(value="Категории", size=20, weight=10),
         alignment=ft.Alignment(0, -0.5),
@@ -107,4 +110,4 @@ def create_page(page: ft.Page):
     categories = load_categories(page)
     products = load_products(page)
 
-    return [search_bar, filtered_list, categories_text, categories, product_text, products]
+    return [admin_panel, search_bar, filtered_list, categories_text, categories, product_text, products]

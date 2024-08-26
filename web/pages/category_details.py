@@ -1,4 +1,5 @@
 from typing import Text
+from web.database.actions import load_products_of_category
 import flet as ft
 
 
@@ -13,12 +14,13 @@ def create_page(page: ft.Page) -> list[Text]:
     """
     try:
         category = page.route.split('/categories/')[1]
-        description = f"This is the {category} category."
-        return [
-            description,
-            ft.Text(f"Category: {category}", size=25,
-                    weight=ft.FontWeight.BOLD),
-        ]
+        window = ft.Column(
+            controls=[
+                load_products_of_category(page, category)
+            ]
+        )
+        return [window]
+
     except IndexError:
         return [ft.Text(
             "Category not found.", size=25, weight=ft.FontWeight.BOLD
