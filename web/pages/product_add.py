@@ -27,6 +27,7 @@ def add_new_product(
     :param category: Product category.
     :param encoded_image: Encoded image data.
     """
+    category = engine.read_link_of_name_category(category)[0]
     engine.add_product(name, price, description, category, encoded_image)
     logger.info(f"Product added: {name}, Category: {category}")
     UIConstants.NAME_PRODUCT.value = ''
@@ -117,7 +118,11 @@ def create_page(page: ft.Page) -> ft.Container:
     :param page: An instance of ft.Page to create the product add page for.
     :return: A Flet Container with controls for adding a product.
     """
+    page.clean
     file_picker = setup_file_picker(page)
+    UIConstants.CATEGORY_NAME.options=[
+            ft.dropdown.Option(category[0]) for category in engine.read_categories()
+        ]
 
     return ft.Container(
         content=ft.Column(

@@ -45,6 +45,8 @@ async def get_view_controls(page: ft.Page):
     elif page.route == '/deletepage':
         return create_delete_page(page)
 
+        
+
     return []
 
 

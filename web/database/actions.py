@@ -60,14 +60,13 @@ def load_categories(page: ft.Page) -> ft.Row:
     logger.info("Loading categories")
     categories.controls.clear()
     for el in engine.read_categories():
-        name, encoded_image = el
-        category = create_category(name, encoded_image, page)
+        name, name_link, encoded_image = el
+        category = create_category(name,name_link, encoded_image, page)
         categories.controls.append(category)
     return categories
 
 
-def create_category(name, encoded_image, page: ft.Page) -> ft.Row:
-    name = transliterate.translit(name, 'ru', reversed=False)
+def create_category(name, name_link, encoded_image, page: ft.Page) -> ft.Row:
     """
     Create a list of Flet Text items from data.
 
@@ -80,7 +79,6 @@ def create_category(name, encoded_image, page: ft.Page) -> ft.Row:
     else:
         if encoded_image == '0':
             encoded_image = error_image.image_scr
-        name_link = transliterate.translit(name, reversed=True)
         return ft.Container(content=ft.Stack(
             controls=[
                 ft.Image(
@@ -181,11 +179,11 @@ def load_products_of_category(page: ft.Page, name_link: str) -> None:
     # if engine.read_products_of_category(name) == []:
     #     return ft.Text("Эта категория пуста", size=20, text_align=ft.TextAlign.CENTER)
     # else:
-    name = transliterate.translit(name_link, 'ru', reversed=False)
+    
 
     products_in_category.controls.clear()
     products_in_category.controls.append(ft.Container(content=ft.Text(
-        f"Все товары в ктегории {name}", size=20, color=ft.colors.WHITE)))
+        f"Все товары в ктегории {name_link}", size=20, color=ft.colors.WHITE)))
     for el in engine.read_products_of_category(name_link):
         name, description, price, category, encoded_image = el
         list_of_product = create_product(name, encoded_image, page)

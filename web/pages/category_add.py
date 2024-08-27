@@ -5,6 +5,7 @@ import base64
 from web.database import engine
 from web.ui.elements import UIConstants
 from typing import List,Optional
+from transliterate import slugify
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,7 +17,10 @@ def add_new_category(category_name: str , encoded_image: str, page):
 
     :param category_name: Name of the new category.
     """
-    engine.add_category(category_name,encoded_image)
+    def convert_cyrillic_to_latin(text):
+        return slugify(text, language_code='ru')
+    category_name_link = convert_cyrillic_to_latin(category_name)
+    engine.add_category(category_name,category_name_link,encoded_image)
     logger.info(f"New category added: {category_name}")
     UIConstants.CATEGORY_NAME_FIELD.value = ""
     page.update()
@@ -106,6 +110,7 @@ def create_page(page: ft.Page) -> ft.Container:
     :param page: An instance of ft.Page to create the category add page for.
     :return: A Flet Container with controls for adding a category.
     """
+    page.clean()
 
     file_picker = setup_file_picker(page)
 

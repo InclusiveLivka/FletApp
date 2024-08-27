@@ -16,6 +16,7 @@ create_categories_table_query = """
 CREATE TABLE IF NOT EXISTS categories
 (
     name TEXT NOT NULL UNIQUE,
+    name_link TEXT NOT NULL UNIQUE,
     encoded_image BLOB NOT NULL
 )
 """
@@ -44,12 +45,12 @@ def init_db():
 # Добавление категории
 
 
-def add_category(name, encoded_image):
-    name = transliterate.translit(name, reversed=True)
+def add_category(name, name_link, encoded_image):
     with sqlite3.connect(DB_PATH) as conn:
+        name_link.replace(' ', '%20')
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO categories(name, encoded_image) VALUES (?, ?)", (name, encoded_image))
+            "INSERT INTO categories(name, name_link, encoded_image) VALUES (?, ?, ?)", (name, name_link, encoded_image))
         conn.commit()
 
 # Добавление продукта
@@ -60,7 +61,7 @@ def add_product(name, price, description, category_name, encoded_image):
         cur = conn.cursor()
 
         # Проверка существования категории
-        cur.execute("SELECT name FROM categories WHERE name = ?",
+        cur.execute("SELECT name_link FROM categories WHERE name_link = ?",
                     (category_name,))
         if cur.fetchone():
             cur.execute(
@@ -126,7 +127,6 @@ def read_data_of_name(name):
         cur = conn.cursor()
         cur.execute("SELECT * FROM products WHERE name = ?", (name,))
         data_products = cur.fetchall()
-        print(data_products)
     return data_products
 
 
@@ -136,8 +136,19 @@ def delete_product(name):
         cur.execute("DELETE FROM products WHERE name = ?", (name,))
         conn.commit()
 
-def delete_category_with_products(name):
+
+def delete_category_and_products(category_name):
     with sqlite3.connect(DB_PATH) as conn:
         cur = conn.cursor()
-        
-        
+        cur.execute("DELETE FROM products WHERE category = ?",
+                    (category_name,))
+        cur.execute("DELETE FROM categories WHERE name = ?", (category_name,))
+        conn.commit()
+
+
+def read_link_of_name_category(name):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT name_link FROM categories WHERE name = ?", (name,)) 
+        link = cur.fetchone()
+        return link
