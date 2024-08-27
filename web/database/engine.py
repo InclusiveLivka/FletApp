@@ -142,7 +142,7 @@ def delete_category_and_products(category_name):
         cur = conn.cursor()
         cur.execute("DELETE FROM products WHERE category = ?",
                     (category_name,))
-        cur.execute("DELETE FROM categories WHERE name = ?", (category_name,))
+        cur.execute("DELETE FROM categories WHERE name_link = ?", (category_name,))
         conn.commit()
 
 
@@ -152,3 +152,4 @@ def read_link_of_name_category(name):
         cur.execute("SELECT name_link FROM categories WHERE name = ?", (name,)) 
         link = cur.fetchone()
         return link
+    

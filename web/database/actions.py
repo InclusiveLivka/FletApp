@@ -147,7 +147,7 @@ def create_product(name, encoded_image, page: ft.Page) -> ft.Container:
             controls=[
                 ft.Image(
                     src_base64=encoded_image,
-                    width=399,
+                    width=389,
                     height=100,
                     fit=ft.ImageFit.FIT_WIDTH,
                     error_content=ft.Text('Нет изображения', size=20),
@@ -163,7 +163,7 @@ def create_product(name, encoded_image, page: ft.Page) -> ft.Container:
                 ),
             ]),
             bgcolor=ft.colors.BLACK,
-            width=399,
+            width=389,
             height=100,
             border_radius=30,
             shadow=elements.UIConstants.BOX_SHADOW,

@@ -4,6 +4,7 @@ import base64
 from typing import List, Optional
 import flet as ft
 from web.ui.elements import UIConstants
+from web.ui import error_image
 from web.database import engine
 
 logging.basicConfig(level=logging.INFO)
@@ -27,6 +28,8 @@ def add_new_product(
     :param category: Product category.
     :param encoded_image: Encoded image data.
     """
+    if encoded_image == '0':
+        encoded_image = error_image.image_scr
     category = engine.read_link_of_name_category(category)[0]
     engine.add_product(name, price, description, category, encoded_image)
     logger.info(f"Product added: {name}, Category: {category}")

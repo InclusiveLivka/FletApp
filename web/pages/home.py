@@ -85,7 +85,7 @@ def create_page(page: ft.Page):
         padding=0
     )
     product_text = ft.Container(
-        content=ft.Text(value=" Товары", size=20, weight=10),
+        content=ft.Text(value="Товары", size=20, weight=10),
         alignment=ft.Alignment(0, -0.5),
         width=399,
         height=50,
