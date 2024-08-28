@@ -1,7 +1,9 @@
 import asyncio
 import logging
+import threading
 import flet as ft
 from web.service import FletService
+from bot.start_bot import start_bot
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -27,8 +29,10 @@ async def main() -> None:
     except Exception as e:
         logger.error(f"Failed to start Flet application: {e}")
         return
+    # Запуск бота
 
     logger.info("Application is running...")
 
 if __name__ == '__main__':
     asyncio.run(main())
+    asyncio.run(start_bot())
