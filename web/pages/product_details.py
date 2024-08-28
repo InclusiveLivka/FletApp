@@ -18,18 +18,49 @@ def create_page(page: ft.Page) -> list[Text]:
         0]
     if encoded_image == error_image.image_scr:
         encoded_image = error_image.image_scr_detalis
-    window = ft.Column(controls=[
+
+    if description == '':
+        description = "Описание отсутствует."
+    else:
+        description = (f"Описание товара: {description}")
+
+    window = ft.Column(controls=[ft.Container(content=ft.FloatingActionButton(
+        text=(f"Категория - {engine.read_name_of_link_category(category)[0]}"),
+        width=389,
+        bgcolor=ft.colors.GREY_900,
+        on_click=lambda e: page.go(f"/categories/{category}"),
+        
+    ),
+        shadow=UIConstants.BOX_SHADOW,
+        border_radius=30,
+        
+    ),
         ft.Container(
-            content=ft.Image(src_base64=encoded_image
-                             , fit=ft.ImageFit.SCALE_DOWN,
+            content=ft.Image(src_base64=encoded_image, fit=ft.ImageFit.SCALE_DOWN,
                              border_radius=30),
             width=389,
             height=200,
             border_radius=30,
             bgcolor=ft.colors.GREY_900,
-            shadow=UIConstants.BOX_SHADOW
-            
-        ),
-
-    ])
+            shadow=UIConstants.BOX_SHADOW,
+    ),
+        ft.Column(controls=[
+            ft.Container(content=ft.Text(
+                value=description,
+            )),
+            ft.Container(content=ft.Text(
+                value=f"Цена: {price}",
+            )),
+            ft.Container(content=ft.FloatingActionButton(
+                text="Купить",
+                on_click=lambda e: print("Купить"),
+                bgcolor=ft.colors.GREY_900,
+                width=389,
+                
+            ),
+            shadow=UIConstants.BOX_SHADOW,
+            border_radius=30
+                
+            )
+        ])])
     return [window]

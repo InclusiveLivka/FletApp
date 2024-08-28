@@ -117,6 +117,7 @@ def create_page(page: ft.Page) -> ft.Container:
     return ft.Container(
         content=ft.Column(
             controls=[
+                ft.Text(value="Добавление категории"),
                 UIConstants.CATEGORY_NAME_FIELD,
                 ft.Row(
                     controls=[

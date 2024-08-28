@@ -43,7 +43,7 @@ def handle_change_search_bar(
     if search_query:
         for name in read_names_products():  # Replace with actual product list
             if search_query in str(name).lower():
-                if len(filtered_list.controls) < 3:
+                if len(filtered_list.controls) < 2:
                     link_name = str(name[0])
 
                     filtered_list.controls.append(

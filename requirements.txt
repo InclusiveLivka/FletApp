@@ -47,3 +47,4 @@ uvloop==0.20.0
 watchdog==4.0.2
 watchfiles==0.23.0
 websockets==13.0
+transliterate==1.10.2

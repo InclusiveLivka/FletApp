@@ -61,7 +61,7 @@ def load_categories(page: ft.Page) -> ft.Row:
     categories.controls.clear()
     for el in engine.read_categories():
         name, name_link, encoded_image = el
-        category = create_category(name,name_link, encoded_image, page)
+        category = create_category(name, name_link, encoded_image, page)
         categories.controls.append(category)
     return categories
 
@@ -89,7 +89,7 @@ def create_category(name, name_link, encoded_image, page: ft.Page) -> ft.Row:
                 ),
                 ft.Container(content=ft.Text(
                     name,
-                    size=10
+                    size=15
                 ),
                     alignment=ft.Alignment(0, 0),
                     bgcolor=ft.colors.BLACK87,
@@ -106,7 +106,7 @@ def create_category(name, name_link, encoded_image, page: ft.Page) -> ft.Row:
             shadow=elements.UIConstants.BOX_SHADOW,
             on_click=lambda e: routes.go_categories(page, name_link),
             margin=10,
-            
+
         )
 
 
@@ -139,7 +139,7 @@ def create_product(name, encoded_image, page: ft.Page) -> ft.Container:
     """
     if not name:
         return [ft.Text('Нет товаров', size=20, text_align=ft.TextAlign.CENTER)]
-    
+
     else:
         if encoded_image == '0':
             encoded_image = error_image.image_scr
@@ -179,11 +179,27 @@ def load_products_of_category(page: ft.Page, name_link: str) -> None:
     # if engine.read_products_of_category(name) == []:
     #     return ft.Text("Эта категория пуста", size=20, text_align=ft.TextAlign.CENTER)
     # else:
-    
 
     products_in_category.controls.clear()
-    products_in_category.controls.append(ft.Container(content=ft.Text(
-        f"Все товары в ктегории {name_link}", size=20, color=ft.colors.WHITE)))
+    products_in_category.controls.append(ft.Container(content=ft.Stack(controls=[
+
+        ft.Container(content=ft.Text(
+        f"Все товары в категории: {engine.read_name_of_link_category(name_link)[0]}",
+            size=15,
+            color=ft.colors.WHITE,
+        
+        ),
+        alignment=ft.Alignment(0, 0),
+        ),
+
+    ]),
+        width=399,
+        height=50,
+        border_radius=30,
+        bgcolor=ft.colors.GREY_900,
+        shadow=elements.UIConstants.BOX_SHADOW,
+    ))
+
     for el in engine.read_products_of_category(name_link):
         name, description, price, category, encoded_image = el
         list_of_product = create_product(name, encoded_image, page)

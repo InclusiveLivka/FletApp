@@ -130,7 +130,7 @@ def create_page(page: ft.Page) -> ft.Container:
     return ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text("Product add"),
+                ft.Text("Добавление Продукта"),
                 UIConstants.NAME_PRODUCT,
                 UIConstants.PRICE_PRODUCT,
                 UIConstants.DESCRIPTION_PRODUCT,
@@ -155,12 +155,6 @@ def create_page(page: ft.Page) -> ft.Container:
                             on_click=lambda _: file_picker.pick_files(),
                         )
                     ],
-                ),
-                ft.FloatingActionButton(
-                    text="Назад",
-                    width=399,
-                    icon=ft.icons.ARROW_BACK,
-                    on_click=lambda _: page.go("/categoryadd"),
                 ),
                 UIConstants.ENCODED_IMAGE_PRODUCT,
             ]

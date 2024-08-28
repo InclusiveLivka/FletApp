@@ -16,7 +16,7 @@ def create_page(page: ft.Page) -> list[ft.Text]:
 
         def delete_category(e):
             engine.delete_category_and_products(
-                UIConstants.DELETE_CATEGORY_FIELD.value)
+                engine.read_link_of_name_category(UIConstants.DELETE_CATEGORY_FIELD.value)[0])
             UIConstants.DELETE_CATEGORY_FIELD.options = [
                 ft.dropdown.Option(category[0]) for category in engine.read_categories()]
             page.close(dlg_modal)
@@ -47,10 +47,10 @@ def create_page(page: ft.Page) -> list[ft.Text]:
         window = ft.Column(controls=[
             UIConstants.DELETE_CATEGORY_FIELD,
             ft.FloatingActionButton(
-                text="Delete", width=399, on_click=lambda e: page.open(dlg_modal)),
+                text="Удалить категорию", width=399, on_click=lambda e: page.open(dlg_modal)),
             UIConstants.DELETE_PRODUCT_FIELD,
             ft.FloatingActionButton(
-                text="Delete", width=399, on_click=lambda e: delete_product),
+                text="Удалить продукт", width=399, on_click=lambda e: delete_product(e)),
 
 
         ])

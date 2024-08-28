@@ -153,3 +153,10 @@ def read_link_of_name_category(name):
         link = cur.fetchone()
         return link
     
+    
+def read_name_of_link_category(name_link):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM categories WHERE name_link = ?", (name_link,)) 
+        name = cur.fetchone()
+        return name
