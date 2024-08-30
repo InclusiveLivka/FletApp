@@ -128,13 +128,12 @@ def create_page(page: ft.Page) -> ft.Container:
     return ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text(value="Добавление категории"),
                 UIConstants.CATEGORY_NAME_FIELD,
                 ft.Row(
                     controls=[
                         ft.FloatingActionButton(
                             text="Добавить категорию",
-                            width=300,
+                            width=259,
                             on_click=lambda e: add_new_category(
                                 UIConstants.CATEGORY_NAME_FIELD.value,
                                 UIConstants.ENCODED_IMAGE_CATEGORY.value,
@@ -143,7 +142,7 @@ def create_page(page: ft.Page) -> ft.Container:
                         ),
                             ft.FloatingActionButton(
                                 icon=ft.icons.IMAGE,
-                                width=89,
+                                width=94,
                                 on_click=lambda e: file_picker.pick_files(),
                         ),
                     ],

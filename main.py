@@ -19,7 +19,7 @@ async def main() -> None:
     logger.info("Starting main application...")
 
     # Инициализация Flet сервиса
-    flet_service = FletService(upload_dir="uploads", view=ft.WEB_BROWSER)
+    flet_service = FletService(upload_dir="uploads", view=ft.FLET_APP)
 
     # Запуск Flet сервиса
     try:

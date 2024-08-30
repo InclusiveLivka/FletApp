@@ -4,11 +4,11 @@ from typing import List
 from web.ui.error_image import image_scr, image_scr_detalis
 
 currency = [
-    'USD',
-    'BYN',
-    'RUB',
-    'EUR',
-    'UAH',
+    'usd',
+    'byn',
+    'rub',
+    'eur',
+    'uah',
 ]
 
 
@@ -17,7 +17,7 @@ class UIConstants:
     Class to hold constant values used in the UI.
     """
     COLORS = {
-        "shadow": ft.colors.PURPLE_ACCENT,
+        "shadow": ft.colors.BLACK87,
     }
 
     BOX_SHADOW = ft.BoxShadow(
@@ -34,7 +34,7 @@ class UIConstants:
     ENCODED_IMAGE_PRODUCT = ft.TextField(
         value=image_scr, opacity=0, read_only=True)
     NAME_PRODUCT = ft.TextField(label="Название", width=399)
-    PRICE_PRODUCT = ft.TextField(label="Цена", width=289)
+    PRICE_PRODUCT = ft.TextField(label="Цена", width=259)
     DESCRIPTION_PRODUCT = ft.TextField(
         label="Описание", width=399, multiline=True)
 
@@ -72,7 +72,7 @@ class UIConstants:
     CURRENCY_FIELD = ft.Dropdown(
         value="USD",
         label="валюта",
-        width=99,
+        width=94,
         options=[
             ft.dropdown.Option(currency[i]) for i in range(len(currency))
             

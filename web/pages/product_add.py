@@ -158,9 +158,7 @@ def create_page(page: ft.Page) -> ft.Container:
     return ft.Container(
         content=ft.Column(
             controls=[
-                ft.Row(controls=[
-                    ft.Text("Добавление Продукта"),
-                    UIConstants.CHEKBOX,
+                ft.Row(controls=[                   
                 ]),
                 UIConstants.NAME_PRODUCT,
         ft.Row(controls=[
@@ -169,11 +167,12 @@ def create_page(page: ft.Page) -> ft.Container:
             ]),
                 UIConstants.DESCRIPTION_PRODUCT,
                 UIConstants.CATEGORY_NAME,
+                UIConstants.CHEKBOX,
                 ft.Row(
                     controls=[
                         ft.FloatingActionButton(
                             text="Добавить продукт",
-                            width=300,
+                            width=259,
                             on_click=lambda e: add_new_product(
                                 UIConstants.NAME_PRODUCT.value,
                                 UIConstants.PRICE_PRODUCT.value,
@@ -186,7 +185,7 @@ def create_page(page: ft.Page) -> ft.Container:
                         ),
                         ft.FloatingActionButton(
                             icon=ft.icons.IMAGE,
-                            width=89,
+                            width=94,
                             on_click=lambda _: file_picker.pick_files(),
                         )
                     ],

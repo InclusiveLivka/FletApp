@@ -78,12 +78,12 @@ def create_page(page: ft.Page):
     admin_panel = ft.Row(controls=[
         ft.ElevatedButton(
             text="Добавить",
-            width=189,
+            width=179,
             on_click=lambda e: page.go('/categoryadd')
         ),
         ft.ElevatedButton(
             text="Удалить",
-            width=189,
+            width=179,
             on_click=lambda e: page.go('/deletepage')
         ),
     ])

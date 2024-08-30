@@ -149,7 +149,7 @@ def create_product(name, encoded_image, curency, price, page: ft.Page) -> ft.Con
                     border_radius=30,
                     margin=5,
                     content=ft.Container(content=ft.Text(
-                        value=f"Цена : {price} {curency}",
+                        value=f"{price} {curency}",
                         
                     ),
                         alignment=ft.Alignment(-0.8, 0.8),

@@ -21,46 +21,66 @@ def create_page(page: ft.Page) -> list[Text]:
 
     if description == '':
         description = "Описание отсутствует."
-    else:
-        description = (f"Описание товара: {description}")
 
-    window = ft.Column(controls=[ft.Container(content=ft.FloatingActionButton(
-        text=(f"Категория - {engine.read_name_of_link_category(category)[0]}"),
-        width=389,
-        bgcolor=ft.colors.GREY_900,
-        on_click=lambda e: page.go(f"/categories/{category}"),
-        
-    ),
-        shadow=UIConstants.BOX_SHADOW,
-        border_radius=30,
-        
-    ),
-        ft.Container(
-            content=ft.Image(src_base64=encoded_image, fit=ft.ImageFit.SCALE_DOWN,
-                             border_radius=30),
-            width=389,
-            height=200,
+    window = ft.Column(controls=[
+        ft.Container(ft.Stack(controls=[ft.Container(
+                width=389,
+                height=300,
+                bgcolor=ft.colors.BLACK54,
+                border_radius=30,
+                content=ft.Container(content=ft.Text(
+            value=f"Цена: {price} {currency}",
+            ),
+            alignment=ft.Alignment(-0.9,0.9)
+            ),
+            ),
+                                        ft.Container(
+            content=ft.Image(
+                src_base64=encoded_image,
+                fit=ft.ImageFit.CONTAIN,
+                border_radius=30
+                
+            ),
+            width=379,
+            height=250,
             border_radius=30,
             bgcolor=ft.colors.GREY_900,
             shadow=UIConstants.BOX_SHADOW,
-    ),
+            margin=5,
+        )]),
+
+        ),
         ft.Column(controls=[
             ft.Container(content=ft.Text(
                 value=description,
-            )),
-            ft.Container(content=ft.Text(
-                value=f"Цена: {price} {currency}",
-            )),
+            ),
+                width=389,
+                border_radius=25,
+                bgcolor=ft.colors.GREY_900,
+                shadow=UIConstants.BOX_SHADOW,
+                padding=10
+            ),
+
             ft.Container(content=ft.FloatingActionButton(
-                text="Купить",
+                text="Перейти к покупке",
                 on_click=lambda e: print("Купить"),
                 bgcolor=ft.colors.GREY_900,
                 width=389,
-                
             ),
-            shadow=UIConstants.BOX_SHADOW,
-            border_radius=30
-                
-            )
+                shadow=UIConstants.BOX_SHADOW,
+                border_radius=25,
+            ),
+            ft.Container(content=ft.FloatingActionButton(
+                text=(
+                    f"Перейти в категорию - {engine.read_name_of_link_category(category)[0]}"),
+                width=389,
+                bgcolor=ft.colors.GREY_900,
+                on_click=lambda e: page.go(f"/categories/{category}"),
+
+            ),
+                shadow=UIConstants.BOX_SHADOW,
+                border_radius=25,
+
+            ),
         ])])
     return [window]
