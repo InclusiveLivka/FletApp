@@ -25,7 +25,8 @@ create_products_table_query = """
 CREATE TABLE IF NOT EXISTS products
 (
     name TEXT NOT NULL,
-    price INTEGER NOT NULL,
+    price TEXT NOT NULL,
+    currency TEXT NOT NULL,
     description TEXT NOT NULL,
     category TEXT NOT NULL,
     encoded_image BLOB NOT NULL
@@ -56,17 +57,18 @@ def add_category(name, name_link, encoded_image):
 # Добавление продукта
 
 
-def add_product(name, price, description, category_name, encoded_image):
+def add_product(name, price, currency, description, category_name, encoded_image):
     with sqlite3.connect(DB_PATH) as conn:
         cur = conn.cursor()
+        
 
         # Проверка существования категории
         cur.execute("SELECT name_link FROM categories WHERE name_link = ?",
                     (category_name,))
         if cur.fetchone():
             cur.execute(
-                "INSERT INTO products(name, price, description, category, encoded_image) VALUES (?, ?, ?, ?, ?)",
-                (name, price, description, category_name, encoded_image),
+                "INSERT INTO products(name, price, currency, description, category, encoded_image) VALUES (?, ?, ?, ?, ?, ?)",
+                (name, price, currency, description, category_name, encoded_image),
             )
             conn.commit()
         else:
@@ -160,3 +162,5 @@ def read_name_of_link_category(name_link):
         cur.execute("SELECT name FROM categories WHERE name_link = ?", (name_link,)) 
         name = cur.fetchone()
         return name
+    
+init_db()

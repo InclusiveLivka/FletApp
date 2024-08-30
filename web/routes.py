@@ -1,6 +1,8 @@
 import flet as ft
 import logging
 
+from web.ui import elements
+
 from web.pages.home import create_page as create_home_page
 from web.pages.admin_home import create_page as create_admin_home_page
 from web.pages.product_add import create_page as create_product_add_page

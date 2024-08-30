@@ -14,7 +14,7 @@ def create_page(page: ft.Page) -> list[Text]:
     """
 
     name_link = page.route.split("/products/")[1]
-    name, price, description, category, encoded_image = engine.read_data_of_name(name_link)[
+    name, price, currency, description, category, encoded_image = engine.read_data_of_name(name_link)[
         0]
     if encoded_image == error_image.image_scr:
         encoded_image = error_image.image_scr_detalis
@@ -49,7 +49,7 @@ def create_page(page: ft.Page) -> list[Text]:
                 value=description,
             )),
             ft.Container(content=ft.Text(
-                value=f"Цена: {price}",
+                value=f"Цена: {price} {currency}",
             )),
             ft.Container(content=ft.FloatingActionButton(
                 text="Купить",

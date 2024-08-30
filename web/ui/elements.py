@@ -1,6 +1,15 @@
 import flet as ft
 from web.database import engine
 from typing import List
+from web.ui.error_image import image_scr, image_scr_detalis
+
+currency = [
+    'USD',
+    'BYN',
+    'RUB',
+    'EUR',
+    'UAH',
+]
 
 
 class UIConstants:
@@ -21,11 +30,11 @@ class UIConstants:
 
     # Assuming the default value and other initializations
     ENCODED_IMAGE_CATEGORY = ft.TextField(
-        value='0', opacity=0, read_only=True)
+        value=image_scr, opacity=0, read_only=True)
     ENCODED_IMAGE_PRODUCT = ft.TextField(
-        value='0', opacity=0, read_only=True)
+        value=image_scr, opacity=0, read_only=True)
     NAME_PRODUCT = ft.TextField(label="Название", width=399)
-    PRICE_PRODUCT = ft.TextField(label="Цена", width=399)
+    PRICE_PRODUCT = ft.TextField(label="Цена", width=289)
     DESCRIPTION_PRODUCT = ft.TextField(
         label="Описание", width=399, multiline=True)
 
@@ -37,7 +46,7 @@ class UIConstants:
     )
 
     CATEGORY_NAME = ft.Dropdown(
-        label="Категория (обязательно)",
+        label="Категория",
         width=399,
         options=[
             ft.dropdown.Option(category[0]) for category in engine.read_categories()
@@ -54,5 +63,19 @@ class UIConstants:
     DELETE_PRODUCT_FIELD = ft.Dropdown(
         label="Выберите продукт",
         width=399,
-        options=[ft.dropdown.Option(product[0]) for product in engine.read_products()]
+        options=[ft.dropdown.Option(product[0])
+                 for product in engine.read_products()]
     )
+
+    CHEKBOX = ft.Checkbox(label="Возвращать на главную.", value=False)
+
+    CURRENCY_FIELD = ft.Dropdown(
+        value="USD",
+        label="валюта",
+        width=99,
+        options=[
+            ft.dropdown.Option(currency[i]) for i in range(len(currency))
+            
+        ]
+    )
+

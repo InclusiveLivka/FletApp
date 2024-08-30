@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 def add_new_product(
     name: str,
-    price: str,
+    price: int,
+    currency: str,
     description: str,
     category: str,
     encoded_image: str,
@@ -28,16 +29,43 @@ def add_new_product(
     :param category: Product category.
     :param encoded_image: Encoded image data.
     """
-    if encoded_image == '0':
-        encoded_image = error_image.image_scr
-    category = engine.read_link_of_name_category(category)[0]
-    engine.add_product(name, price, description, category, encoded_image)
-    logger.info(f"Product added: {name}, Category: {category}")
-    UIConstants.NAME_PRODUCT.value = ''
-    UIConstants.PRICE_PRODUCT.value = ''
-    UIConstants.DESCRIPTION_PRODUCT.value = ''
-    UIConstants.CATEGORY_NAME.value = ''
-    UIConstants.ENCODED_IMAGE_PRODUCT.value = ''
+
+    dlg_modal_name = ft.AlertDialog(
+        content=ft.Text("Название не может быть пустым!"),
+        actions=[ft.TextButton(
+            "ОК", on_click=lambda e: page.close(dlg_modal_name))],
+    )
+    dlg_modal_category = ft.AlertDialog(
+        content=ft.Text("Категория не может быть пустой!"),
+        actions=[ft.TextButton(
+            "ОК", on_click=lambda e: page.close(dlg_modal_category))],
+    )
+    dlg_modal_add_product = ft.AlertDialog(
+        content=ft.Text("Продукт успешно добавлен!"),
+        actions=[ft.TextButton(
+            "ОК", on_click=lambda e: page.close(dlg_modal_add_product))],
+    )
+
+    if UIConstants.NAME_PRODUCT.value == '':
+        page.open(dlg_modal_name)
+    elif UIConstants.CATEGORY_NAME.value == None:
+        page.open(dlg_modal_category)
+    else:
+        if UIConstants.PRICE_PRODUCT.value == "":
+            price = "Не указана!"
+            currency = ''
+        
+        category = engine.read_link_of_name_category(category)[0]
+        engine.add_product(name, price, currency, description, category, encoded_image)
+        logger.info(f"Product added: {name}, Category: {category}")
+        UIConstants.NAME_PRODUCT.value = ''
+        UIConstants.PRICE_PRODUCT.value = ''
+        UIConstants.DESCRIPTION_PRODUCT.value = ''
+        UIConstants.CATEGORY_NAME.value = ''
+        UIConstants.ENCODED_IMAGE_PRODUCT.value = error_image.image_scr
+        page.open(dlg_modal_add_product)
+        if UIConstants.CHEKBOX.value:
+            page.go('/adminhome')
     page.update()
 
 
@@ -61,7 +89,7 @@ def encode_image_to_base64(
             ).decode('utf-8')
         os.remove(file_path)
         UIConstants.ENCODED_IMAGE_PRODUCT.value = encoded_string
-        
+
         logger.info(f"File uploaded and encoded: {update.file_name}")
 
 
@@ -123,16 +151,22 @@ def create_page(page: ft.Page) -> ft.Container:
     """
     page.clean
     file_picker = setup_file_picker(page)
-    UIConstants.CATEGORY_NAME.options=[
-            ft.dropdown.Option(category[0]) for category in engine.read_categories()
-        ]
+    UIConstants.CATEGORY_NAME.options = [
+        ft.dropdown.Option(category[0]) for category in engine.read_categories()
+    ]
 
     return ft.Container(
         content=ft.Column(
             controls=[
-                ft.Text("Добавление Продукта"),
+                ft.Row(controls=[
+                    ft.Text("Добавление Продукта"),
+                    UIConstants.CHEKBOX,
+                ]),
                 UIConstants.NAME_PRODUCT,
+        ft.Row(controls=[
                 UIConstants.PRICE_PRODUCT,
+                UIConstants.CURRENCY_FIELD
+            ]),
                 UIConstants.DESCRIPTION_PRODUCT,
                 UIConstants.CATEGORY_NAME,
                 ft.Row(
@@ -143,6 +177,7 @@ def create_page(page: ft.Page) -> ft.Container:
                             on_click=lambda e: add_new_product(
                                 UIConstants.NAME_PRODUCT.value,
                                 UIConstants.PRICE_PRODUCT.value,
+                                UIConstants.CURRENCY_FIELD.value,
                                 UIConstants.DESCRIPTION_PRODUCT.value,
                                 UIConstants.CATEGORY_NAME.value,
                                 UIConstants.ENCODED_IMAGE_PRODUCT.value,

@@ -17,13 +17,24 @@ def add_new_category(category_name: str , encoded_image: str, page):
 
     :param category_name: Name of the new category.
     """
+    dlg_modal_name = ft.AlertDialog(
+        content=ft.Text("Название не может быть пустым!"),
+        actions=[ft.TextButton("ОК", on_click= lambda e: page.close(dlg_modal_name))],
+        actions_alignment=ft.MainAxisAlignment.END
+    )
+    
     def convert_cyrillic_to_latin(text):
         return slugify(text, language_code='ru')
-    category_name_link = convert_cyrillic_to_latin(category_name)
-    engine.add_category(category_name,category_name_link,encoded_image)
-    logger.info(f"New category added: {category_name}")
-    UIConstants.CATEGORY_NAME_FIELD.value = ""
-    page.update()
+    if category_name == "":
+        page.open(dlg_modal_name)
+        page.update()
+        return
+    else:
+        category_name_link = convert_cyrillic_to_latin(category_name)
+        engine.add_category(category_name,category_name_link,encoded_image)
+        logger.info(f"New category added: {category_name}")
+        UIConstants.CATEGORY_NAME_FIELD.value = ""
+        page.update()
     
 
 
