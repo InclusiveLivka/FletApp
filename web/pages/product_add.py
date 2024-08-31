@@ -1,15 +1,15 @@
 import logging
 import os
 import base64
-from typing import List, Optional
 import flet as ft
+
+from typing import List, Optional
 from web.ui.elements import UIConstants
 from web.ui import error_image
 from web.database import engine
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 def add_new_product(
     name: str,
@@ -18,7 +18,7 @@ def add_new_product(
     description: str,
     category: str,
     encoded_image: str,
-    page
+    page: ft.Page,
 ) -> None:
     """
     Adds a new product to the database.
@@ -54,9 +54,10 @@ def add_new_product(
         if UIConstants.PRICE_PRODUCT.value == "":
             price = "Не указана!"
             currency = ''
-        
+
         category = engine.read_link_of_name_category(category)[0]
-        engine.add_product(name, price, currency, description, category, encoded_image)
+        engine.add_product(name, price, currency,
+                           description, category, encoded_image)
         logger.info(f"Product added: {name}, Category: {category}")
         UIConstants.NAME_PRODUCT.value = ''
         UIConstants.PRICE_PRODUCT.value = ''
@@ -65,7 +66,7 @@ def add_new_product(
         UIConstants.ENCODED_IMAGE_PRODUCT.value = error_image.image_scr
         page.open(dlg_modal_add_product)
         if UIConstants.CHEKBOX.value:
-            page.go('/adminhome')
+            page.go(f"/{UIConstants.ADMIN_LINK}")
     page.update()
 
 
@@ -158,13 +159,13 @@ def create_page(page: ft.Page) -> ft.Container:
     return ft.Container(
         content=ft.Column(
             controls=[
-                ft.Row(controls=[                   
+                ft.Row(controls=[
                 ]),
                 UIConstants.NAME_PRODUCT,
-        ft.Row(controls=[
-                UIConstants.PRICE_PRODUCT,
-                UIConstants.CURRENCY_FIELD
-            ]),
+                ft.Row(controls=[
+                    UIConstants.PRICE_PRODUCT,
+                    UIConstants.CURRENCY_FIELD
+                ]),
                 UIConstants.DESCRIPTION_PRODUCT,
                 UIConstants.CATEGORY_NAME,
                 UIConstants.CHEKBOX,
@@ -172,7 +173,7 @@ def create_page(page: ft.Page) -> ft.Container:
                     controls=[
                         ft.FloatingActionButton(
                             text="Добавить продукт",
-                            width=259,
+                            width=294,
                             on_click=lambda e: add_new_product(
                                 UIConstants.NAME_PRODUCT.value,
                                 UIConstants.PRICE_PRODUCT.value,

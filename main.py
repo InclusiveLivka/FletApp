@@ -1,9 +1,8 @@
 import asyncio
 import logging
-import threading
 import flet as ft
+
 from web.service import FletService
-from bot.start_bot import start_bot
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

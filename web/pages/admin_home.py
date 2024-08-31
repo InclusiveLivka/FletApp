@@ -1,8 +1,8 @@
 import logging
 import flet as ft
-import transliterate
-from web.ui.elements import UIConstants
+
 from web import routes
+from web.ui.elements import UIConstants
 from web.database.engine import read_names_products
 from web.database.actions import load_products, load_categories
 
@@ -64,6 +64,8 @@ def create_page(page: ft.Page):
     :return: A list of Flet controls for the home page.
     """
     page.clean()
+    filtered_list.controls.clear()
+
     search_bar = ft.SearchBar(
         view_elevation=2,
         on_submit=handle_submit_search_bar,
@@ -74,7 +76,7 @@ def create_page(page: ft.Page):
         e, search_bar, filtered_list, page
     )
     filtered_list
-    
+
     admin_panel = ft.Row(controls=[
         ft.ElevatedButton(
             text="Добавить",
@@ -88,26 +90,16 @@ def create_page(page: ft.Page):
         ),
     ])
 
-    categories_text = ft.Container(
-        content=ft.Text(value="Категории", size=20, weight=10),
-        alignment=ft.Alignment(0, -0.5),
-        width=399,
-        height=50,
-        opacity=0.5,
-        padding=0
-    )
-    product_text = ft.Container(
-        content=ft.Text(value=" Товары", size=20, weight=10),
-        alignment=ft.Alignment(0, -0.5),
-        width=399,
-        height=50,
-        opacity=0.5,
-        padding=0
-    )
-
     # categories = load_categories()
 
     categories = load_categories(page)
     products = load_products(page)
 
-    return [admin_panel, search_bar, filtered_list, categories_text, categories, product_text, products]
+    return [
+        admin_panel,
+        search_bar,
+        filtered_list,
+        UIConstants.CATEGORY_TEXT,
+        categories,
+        UIConstants.PRODUCTS_TEXT,
+        products]

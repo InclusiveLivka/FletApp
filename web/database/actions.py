@@ -1,7 +1,6 @@
 import logging
 import flet as ft
-import transliterate
-from typing import List
+
 from web.database import engine
 from web.ui import elements
 from web.ui import error_image
@@ -124,7 +123,8 @@ def load_products(page: ft.Page) -> ft.Column:
     products.controls.clear()
     for el in engine.read_products():
         name, price, currency, description, category, encoded_image = el
-        list_of_product = create_product(name, encoded_image, currency, price, page)
+        list_of_product = create_product(
+            name, encoded_image, currency, price, page)
         products.controls.append(list_of_product)
     return products
 
@@ -137,93 +137,60 @@ def create_product(name, encoded_image, curency, price, page: ft.Page) -> ft.Con
     :param label: The label to prefix each text item with.
     :return: A list of Flet Text items.
     """
-    if not name:
+    if name == "":
         return [ft.Text('Нет товаров', size=20, text_align=ft.TextAlign.CENTER)]
 
     else:
         return ft.Stack(controls=[
-                ft.Container(
-                    width=389,
-                    height=150,
-                    bgcolor=ft.colors.BLACK54,
-                    border_radius=30,
-                    margin=5,
-                    content=ft.Container(content=ft.Text(
+            ft.Container(
+                width=389,
+                height=150,
+                bgcolor=ft.colors.BLACK54,
+                border_radius=30,
+                margin=5,
+                content=ft.Container(content=ft.Text(
                         value=f"{price} {curency}",
-                        
+
+                        ),
+                    alignment=ft.Alignment(-0.8, 0.8),
+                )
+
+
+            ),
+
+
+
+            ft.Container(content=ft.Stack(
+                controls=[
+                    ft.Image(
+                        src_base64=encoded_image,
+                        width=387,
+                        height=100,
+                        fit=ft.ImageFit.FIT_WIDTH,
+                        error_content=ft.Text('Нет изображения', size=20),
+
                     ),
-                        alignment=ft.Alignment(-0.8, 0.8),
-                                         )
-                
-            
+                    ft.Container(content=ft.Text(
+                        name,
+                        size=20,
+
+                    ), alignment=ft.Alignment(0, 0),
+                        bgcolor=ft.colors.BLACK87,
+                        opacity=0.5,
                     ),
 
-                             
-                    
-                    ft.Container(content=
-                    ft.Stack(
-            controls=[
-                ft.Image(
-                    src_base64=encoded_image,
-                    width=387,
-                    height=100,
-                    fit=ft.ImageFit.FIT_WIDTH,
-                    error_content=ft.Text('Нет изображения', size=20),
 
-                ),
-                ft.Container(content=ft.Text(
-                    name,
-                    size=20,
-
-                ), alignment=ft.Alignment(0, 0),
-                    bgcolor=ft.colors.BLACK87,
-                    opacity=0.5,
-                ),
-
-
-            ]),
-            bgcolor=ft.colors.BLACK,
-            width=379,
-            height=100,
-            border_radius=30,
-            shadow=elements.UIConstants.BOX_SHADOW,
-            on_click=lambda e: routes.go_products(page, name),
-            margin=10,
-        ),
+                ]),
+                bgcolor=ft.colors.BLACK,
+                width=379,
+                height=100,
+                border_radius=30,
+                shadow=elements.UIConstants.BOX_SHADOW,
+                on_click=lambda e: routes.go_products(page, name),
+                margin=10,
+            ),
 
         ])
 
 
 products_in_category = ft.Column()
-
-
-def load_products_of_category(page: ft.Page, name_link: str) -> None:
-    # if engine.read_products_of_category(name) == []:
-    #     return ft.Text("Эта категория пуста", size=20, text_align=ft.TextAlign.CENTER)
-    # else:
-
-    products_in_category.controls.clear()
-    products_in_category.controls.append(ft.Container(content=ft.Stack(controls=[
-
-        ft.Container(content=ft.Text(
-        f"Все товары в категории: {engine.read_name_of_link_category(name_link)[0]}",
-            size=15,
-            color=ft.colors.WHITE,
-        
-        ),
-        alignment=ft.Alignment(0, 0),
-        ),
-
-    ]),
-        width=399,
-        height=50,
-        border_radius=30,
-        bgcolor=ft.colors.GREY_900,
-        shadow=elements.UIConstants.BOX_SHADOW,
-    ))
-
-    for el in engine.read_products_of_category(name_link):
-        name, price, currency, description, category, encoded_image = el
-        list_of_product = create_product(name, encoded_image, currency, price, page)
-        products_in_category.controls.append(list_of_product)
-    return products_in_category

@@ -1,34 +1,45 @@
 import flet as ft
 import logging
+
 from web.ui.elements import UIConstants
 from web.database import engine
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def create_page(page: ft.Page) -> list[ft.Text]:
+def create_page(page: ft.Page) -> list[ft.Control]:
+    """
+    Create a page for deleting categories and products.
+
+    :param page: The page to create the delete page for.
+    :return: A list of Flet controls for the delete page.
+    """
     try:
+        categories = engine.read_categories()
+        products = engine.read_products()
 
         UIConstants.DELETE_CATEGORY_FIELD.options = [
-            ft.dropdown.Option(category[0]) for category in engine.read_categories()]
+            ft.dropdown.Option(category[0]) for category in categories]
         UIConstants.DELETE_PRODUCT_FIELD.options = [
-            ft.dropdown.Option(product[0]) for product in engine.read_products()]
+            ft.dropdown.Option(product[0]) for product in products]
 
-        def delete_category(e):
-            engine.delete_category_and_products(
-                engine.read_link_of_name_category(UIConstants.DELETE_CATEGORY_FIELD.value)[0])
+        def delete_category(e: ft.ControlEvent):
+            category_link = engine.read_link_of_name_category(
+                UIConstants.DELETE_CATEGORY_FIELD.value)[0]
+            engine.delete_category_and_products(category_link)
             UIConstants.DELETE_CATEGORY_FIELD.options = [
                 ft.dropdown.Option(category[0]) for category in engine.read_categories()]
             page.close(dlg_modal)
             page.update()
 
-        def delete_product(e):
+        def delete_product(e: ft.ControlEvent):
             engine.delete_product(UIConstants.DELETE_PRODUCT_FIELD.value)
             UIConstants.DELETE_PRODUCT_FIELD.options = [
                 ft.dropdown.Option(product[0]) for product in engine.read_products()]
             page.update()
 
-        def close_modal(e):
+        def close_modal(e: ft.ControlEvent):
             page.close(dlg_modal)
 
         dlg_modal = ft.AlertDialog(

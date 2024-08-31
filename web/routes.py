@@ -1,7 +1,7 @@
 import flet as ft
 import logging
 
-from web.ui import elements
+from web.ui.elements import UIConstants
 
 from web.pages.home import create_page as create_home_page
 from web.pages.admin_home import create_page as create_admin_home_page
@@ -42,12 +42,10 @@ async def get_view_controls(page: ft.Page):
         return [create_product_add_page(page)]
     elif page.route == '/categoryadd':
         return [create_category_add_page(page)]
-    elif page.route == '/adminhome':
+    elif page.route == (f"/{UIConstants.ADMIN_LINK}"):
         return create_admin_home_page(page)
     elif page.route == '/deletepage':
         return create_delete_page(page)
-
-        
 
     return []
 
@@ -74,7 +72,7 @@ async def setup_routes(page: ft.Page):
     # Если маршрут пустой, устанавливаем начальный маршрут как /home
     if not page.route or page.route == "/":
         logger.info("Initial route is empty. Navigating to /home.")
-        page.route = '/adminhome'
+        page.route = '/home'
         page.update()
 
     page.on_route_change = route_change

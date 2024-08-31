@@ -2,6 +2,7 @@ import logging
 import flet as ft
 import os
 import base64
+
 from web.database import engine
 from web.ui.elements import UIConstants
 from typing import List,Optional
@@ -124,6 +125,8 @@ def create_page(page: ft.Page) -> ft.Container:
     page.clean()
 
     file_picker = setup_file_picker(page)
+    
+    UIConstants.CATEGORY_NAME_FIELD.value = ""
 
     return ft.Container(
         content=ft.Column(
@@ -133,7 +136,7 @@ def create_page(page: ft.Page) -> ft.Container:
                     controls=[
                         ft.FloatingActionButton(
                             text="Добавить категорию",
-                            width=259,
+                            width=294,
                             on_click=lambda e: add_new_category(
                                 UIConstants.CATEGORY_NAME_FIELD.value,
                                 UIConstants.ENCODED_IMAGE_CATEGORY.value,

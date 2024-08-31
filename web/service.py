@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import flet as ft
+
 from web.app import flet_app
 
 # Configure logging

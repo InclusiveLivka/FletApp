@@ -1,6 +1,5 @@
 import sqlite3
 import logging
-import transliterate
 import os
 
 # Настройка логирования
